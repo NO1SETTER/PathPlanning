@@ -206,7 +206,7 @@ inline bool AstarPathFinder::isFree(const int &idx_x, const int &idx_y, const in
 
 /*
 * @function     AstarPathFinder::AstarGetSucc
-* @brief        获得当前节点周围的nerigbor,并计算每个nerigbor的fscore
+* @brief        获得当前节点周围的neighbor,并计算每个neighbor的fscore
 * @param        GridNodePtr currentPtr                  当前节点
                 vector<GridNodePtr> &neighborPtrSets    neighbor集合
 * @return       vector<double> &edgeCostSets            neighbor的cost集合
@@ -444,7 +444,7 @@ vector<Vector3d> AstarPathFinder::getPath()
     vector<GridNodePtr> gridPath;
 
     GridNodePtr currentPtr = terminatePtr;
-    while (currentPtr != startPtr)
+    while (currentPtr != startPtr && currentPtr)
     {
         path.push_back(currentPtr->coord);
         currentPtr = currentPtr->cameFrom;    //回溯

@@ -90,7 +90,7 @@ void rcvPointCloudCallBack(const sensor_msgs::PointCloud2 &pointcloud_map)
 
     pcl::toROSMsg(cloud_vis, map_vis);
 
-    map_vis.header.frame_id = "/world";
+    map_vis.header.frame_id = "world";
     _grid_map_vis_pub.publish(map_vis);
 
     _has_map = true;
@@ -128,29 +128,33 @@ void pathFinding(const Vector3d start_pt, const Vector3d target_pt)
     //获得最优路径和访问的节点
     auto grid_path = _astar_path_finder->getPath();
     auto visited_nodes = _astar_path_finder->getVisitedNodes();
-
+    cout<<"Astar grid_path size:"<<grid_path.size()<<endl;
+    cout<<"Astar visited_nodes size:"<<visited_nodes.size()<<endl;
+    
     //可视化
     visGridPath(grid_path, false);
     visVisitedNode(visited_nodes);
 
     //重置栅格地图,为下次调用做准备
     _astar_path_finder->resetUsedGrids();
-
+    
 
     if(_use_jps)
     {
         // 调用JPS算法
         _jps_path_finder->JPSGraphSearch(start_pt, target_pt);
-
         //获得最优路径和访问的节点
         auto visited_nodes = _jps_path_finder->getVisitedNodes();
         auto grid_path = _jps_path_finder->getPath();
         // auto visited_nodes = _jps_path_finder->getVisitedNodes();
-
+        
+        cout<<"JPS grid_path size:"<<grid_path.size()<<endl;
+        cout<<"JPS visited_nodes size:"<<visited_nodes.size()<<endl;
+        
         //可视化
         visGridPath(grid_path, _use_jps);
         visVisitedNode(visited_nodes);
-
+        
         //重置栅格地图,为下次调用做准备
         _jps_path_finder->resetUsedGrids();
     }
@@ -232,6 +236,7 @@ void visGridPath(vector<Vector3d> nodes, bool is_use_jps)
 
     if (is_use_jps)     //白色CUBE是JPS路径
     {
+
         node_vis.color.a = 1.0;
         node_vis.color.r = 1.0;
         node_vis.color.g = 1.0;
@@ -258,6 +263,7 @@ void visGridPath(vector<Vector3d> nodes, bool is_use_jps)
         pt.z = coord(2);
 
         node_vis.points.push_back(pt);
+        cout<<"x:"<<pt.x<<" y:"<<pt.y<<" z:"<<pt.z<<" add to path"<<endl;
     }
 
     _grid_path_vis_pub.publish(node_vis);
