@@ -16,6 +16,8 @@
 
 #include "Astar_searcher.h"
 #include "JPS_searcher.h"
+#include "../../goal_selector/src/goal_selector.h"
+
 #include "backward.hpp"
 
 using namespace std;
@@ -45,6 +47,7 @@ ros::Publisher _grid_path_vis_pub, _visited_nodes_vis_pub, _grid_map_vis_pub;
 
 AstarPathFinder *_astar_path_finder = new AstarPathFinder();
 JPSPathFinder *_jps_path_finder = new JPSPathFinder();
+GoalSelector* _goal_selector = new GoalSelector();
 
 void rcvPointCloudCallBack(const sensor_msgs::PointCloud2 &pointcloud_map);
 void rcvWaypointsCallback(const nav_msgs::Path &wp);
@@ -55,8 +58,8 @@ void pathFinding(const Vector3d start_pt, const Vector3d target_pt);
 
 void rcvPointCloudCallBack(const sensor_msgs::PointCloud2 &pointcloud_map)
 {
-    if (_has_map)
-        return;
+    //if (_has_map)
+        //return;
 
     pcl::PointCloud<pcl::PointXYZ> cloud;
     pcl::PointCloud<pcl::PointXYZ> cloud_vis;
@@ -93,7 +96,7 @@ void rcvPointCloudCallBack(const sensor_msgs::PointCloud2 &pointcloud_map)
     map_vis.header.frame_id = "world";
     _grid_map_vis_pub.publish(map_vis);
 
-    _has_map = true;
+    //_has_map = true;
 }
 
 void rcvWaypointsCallback(const nav_msgs::Path &wp)
@@ -198,6 +201,9 @@ int main(int argc, char **argv)
 
     _jps_path_finder = new JPSPathFinder();
     _jps_path_finder->initGridMap(_resolution, _map_lower, _map_upper, _max_x_id, _max_y_id, _max_z_id);
+
+    _goal_selector = new GoalSelector();
+    _goal_selector->initGridMap(_resolution, _map_lower, _map_upper, _max_x_id, _max_y_id, _max_z_id);
 
     ros::Rate rate(100);
     bool status = ros::ok();

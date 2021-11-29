@@ -12,11 +12,11 @@
 
   <node pkg="grid_path_searcher" type="demo_node" name="demo_node" output="screen" required= "true">
       <remap from="~waypoints"       to="/waypoint_generator/waypoints"/>
-      <remap from="~map"             to="/random_complex/global_map"/> 
-      <!--remap from="~map" to="pointcloud_mapping/Global/PointCloudOutput"/-->
+      <!--remap from="~map"             to="/random_complex/global_map"/--> 
+      <remap from="~map" to="pointcloud_mapping/Global/PointCloudOutput"/>
       
       <param name="map/margin"       value="0.0" />
-      <param name="map/resolution"   value="0.2" />
+      <param name="map/resolution"   value="0.1" />
       <param name="map/x_size"       value="$(arg map_size_x)"/>
       <param name="map/y_size"       value="$(arg map_size_y)"/>
       <param name="map/z_size"       value="$(arg map_size_z)"/>
@@ -55,5 +55,8 @@
       <remap from="~goal" to="/goal"/>
       <param name="waypoint_type" value="manual-lonely-waypoint"/>    
   </node>
-
+  
+  <!--node pkg="goal_selector" name="goal_selector" type="goal_selector" output="screen">
+  </node-->
+  
 </launch>
